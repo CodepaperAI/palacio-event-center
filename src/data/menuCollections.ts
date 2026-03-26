@@ -27,7 +27,7 @@ export const menuCollections: MenuCollection[] = [
     slug: "south-asian",
     title: "South Asian",
     route: "/menus/south-asian",
-    pdfUrl: "https://palacioeventcentre.com/wp-content/uploads/2022/06/SOUTH-ASIAN-MENU-1.pdf",
+    pdfUrl: "/menus/SOUTH-ASIAN-MENU-1.pdf",
     description:
       "Rich, aromatic dishes spanning traditional Indian, Bangladeshi, and Sri Lankan culinary traditions.",
     group: "Cuisine Menus",
@@ -37,7 +37,7 @@ export const menuCollections: MenuCollection[] = [
     slug: "pakistani-halal",
     title: "Pakistani Halal",
     route: "/menus/pakistani-halal",
-    pdfUrl: "https://palacioeventcentre.com/wp-content/uploads/2022/08/PAKISTANI-HALAL-MENU.pdf",
+    pdfUrl: "/menus/PAKISTANI-HALAL-MENU.pdf",
     description:
       "Certified Halal cuisine with bold Pakistani flavours, refined presentation, and celebration-ready service.",
     group: "Cuisine Menus",
@@ -47,7 +47,7 @@ export const menuCollections: MenuCollection[] = [
     slug: "european",
     title: "European",
     route: "/menus/european",
-    pdfUrl: "https://palacioeventcentre.com/wp-content/uploads/2022/06/EUROPEAN-MENU-PACKAGE.pdf",
+    pdfUrl: "/menus/EUROPEAN-MENU-PACKAGE.pdf",
     description:
       "Classic Continental menus with polished plating and timeless crowd-pleasing dishes.",
     group: "Cuisine Menus",
@@ -57,7 +57,7 @@ export const menuCollections: MenuCollection[] = [
     slug: "gujarati",
     title: "Gujarati",
     route: "/menus/gujarati",
-    pdfUrl: "https://palacioeventcentre.com/wp-content/uploads/2022/06/GUJRATI-WEDDING-MENU.pdf",
+    pdfUrl: "/menus/GUJRATI-WEDDING-MENU.pdf",
     description:
       "Authentic vegetarian specialties celebrating the rich flavour and colour of Gujarati cuisine.",
     group: "Cuisine Menus",
@@ -67,7 +67,7 @@ export const menuCollections: MenuCollection[] = [
     slug: "caribbean",
     title: "Caribbean",
     route: "/menus/caribbean",
-    pdfUrl: "https://palacioeventcentre.com/wp-content/uploads/2022/08/WEST-INDIAN-CARIBBEAN-MENU.pdf",
+    pdfUrl: "/menus/WEST-INDIAN-CARIBBEAN-MENU.pdf",
     description:
       "Bold island flavours, vibrant spices, and energetic menus designed for joyful celebrations.",
     group: "Cuisine Menus",
@@ -77,7 +77,7 @@ export const menuCollections: MenuCollection[] = [
     slug: "bar-packages",
     title: "Bar Packages",
     route: "/menus/bar-packages",
-    pdfUrl: "https://palacioeventcentre.com/wp-content/uploads/2022/06/BAR-PACKAGES.pdf",
+    pdfUrl: "/menus/BAR-PACKAGES.pdf",
     description:
       "Curated beverage programs ranging from premium open bars to signature cocktail service.",
     group: "Services",
@@ -87,7 +87,7 @@ export const menuCollections: MenuCollection[] = [
     slug: "outside-catering",
     title: "Outside Catering",
     route: "/menus/outside-catering",
-    pdfUrl: "https://palacioeventcentre.com/wp-content/uploads/2022/06/CATERING-MENU.pdf",
+    pdfUrl: "/menus/CATERING-MENU.pdf",
     description:
       "Off-site catering packages that bring the Palacio culinary experience to your chosen venue.",
     group: "Services",
@@ -97,7 +97,7 @@ export const menuCollections: MenuCollection[] = [
     slug: "holiday-prom",
     title: "Holiday & Prom",
     route: "/menus/holiday-prom",
-    pdfUrl: "https://palacioeventcentre.com/wp-content/uploads/2022/06/HOLIDAY-MENU-PACKAGE-.pdf",
+    pdfUrl: "/menus/HOLIDAY-MENU-PACKAGE-.pdf",
     description:
       "Seasonal and celebration-specific packages for holiday galas, proms, and festive gatherings.",
     group: "Services",
