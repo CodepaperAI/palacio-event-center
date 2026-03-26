@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { fadeUpVariants } from "@/hooks/useScrollAnimation";
 import { AnimatedSection, SectionHeading, LuxuryCard, IconBox } from "@/components/ui/design-system";
-import { Link } from "react-router-dom";
 import { menuCollections } from "@/data/menuCollections";
 
 const MenusPreview = () => {
@@ -15,7 +14,12 @@ const MenusPreview = () => {
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 md:gap-5">
         {menuCollections.map((category) => (
-          <Link key={category.title} to={category.route}>
+          <a
+            key={category.title}
+            href={category.pdfUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <LuxuryCard className="group relative h-full overflow-hidden p-6 text-center md:p-8">
               <div className="absolute inset-0 bg-gradient-to-b from-gold/0 to-gold/0 group-hover:from-gold/5 group-hover:to-gold/0 transition-all duration-500" />
               <div className="relative">
@@ -27,19 +31,17 @@ const MenusPreview = () => {
                 </span>
               </div>
             </LuxuryCard>
-          </Link>
+          </a>
         ))}
       </div>
 
       <motion.div variants={fadeUpVariants} className="mt-10 text-center">
-        <Link to="/menus">
-          <span className="editorial-link text-xs tracking-[0.2em] hover:tracking-[0.24em]">
-            View All Menus
-            <svg className="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
-          </span>
-        </Link>
+        <a href="/menus" className="editorial-link text-xs tracking-[0.2em] hover:tracking-[0.24em]">
+          View All Menus
+          <svg className="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </a>
       </motion.div>
     </AnimatedSection>
   );
