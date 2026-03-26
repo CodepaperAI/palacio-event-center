@@ -44,7 +44,7 @@ const Footer = () => {
             <img
               src={logo}
               alt="Palacio Event Centre"
-              className="mb-5 h-12 w-auto brightness-0 invert"
+              className="mb-5 h-12 w-auto"
             />
             <p className="max-w-xs text-sm text-ivory/78 font-sans">
               Mississauga&apos;s luxury event venue for weddings, corporate functions, and milestone celebrations with polished service and elevated spaces.

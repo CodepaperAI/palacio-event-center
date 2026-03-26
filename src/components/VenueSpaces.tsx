@@ -31,7 +31,7 @@ const VenueSpaces = () => {
               <img
                 src={primarySpace.image}
                 alt={primarySpace.alt}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000 ease-out"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                 loading="lazy"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-charcoal/95 via-charcoal/64 to-charcoal/18 group-hover:from-charcoal/97 transition-all duration-500" />
@@ -129,7 +129,7 @@ const VenueSpaces = () => {
                 <img
                   src={intimateSpace.image}
                   alt={intimateSpace.alt}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000 ease-out"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                   loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-charcoal/95 via-charcoal/66 to-charcoal/16 group-hover:from-charcoal/97 transition-all duration-500" />

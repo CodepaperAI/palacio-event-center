@@ -121,7 +121,7 @@ const Blog = () => {
         <SectionHeading
           eyebrow="Latest Articles"
           title="Event Planning Tips & Trends"
-          description="Published articles imported from Palacio's official WordPress blog archive, now available directly inside the website."
+          description="Discover the latest event planning insights, venue inspiration, and celebration ideas for your next event."
         />
 
         <motion.div variants={fadeUpVariants} className="mb-10 text-center">

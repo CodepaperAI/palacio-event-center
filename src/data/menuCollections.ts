@@ -1,6 +1,5 @@
 import {
   Globe,
-  Lamp,
   Leaf,
   PartyPopper,
   Salad,
@@ -53,16 +52,6 @@ export const menuCollections: MenuCollection[] = [
       "Classic Continental menus with polished plating and timeless crowd-pleasing dishes.",
     group: "Cuisine Menus",
     icon: Globe,
-  },
-  {
-    slug: "middle-eastern",
-    title: "Middle Eastern",
-    route: "/menus/middle-eastern",
-    pdfUrl: "https://palacioeventcentre.com/wp-content/uploads/2022/06/MIDDLE-EASTERN-MENU-Halal-Menu.pdf",
-    description:
-      "Vibrant mezze, grilled specialties, and warm hospitality inspired by Middle Eastern dining traditions.",
-    group: "Cuisine Menus",
-    icon: Lamp,
   },
   {
     slug: "gujarati",

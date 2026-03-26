@@ -2,18 +2,24 @@ import { Button } from "@/components/ui/button";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { Instagram, Facebook, Mail } from "lucide-react";
 import heroPoster from "@/assets/Website Content/IMG_3666.jpg";
 import weddingsHero from "@/assets/Website Content/IMG_1955.jpg";
-import arribaHero from "@/assets/Website Content/Palacio-20.jpg";
 import foyerHero from "@/assets/Website Content/IMG_3670.jpg";
 import ibizaHero from "@/assets/Website Content/20221027_150416_Original.jpg";
 import ballroomHero from "@/assets/Website Content/IMG_3306.jpg";
-import lobbyHero from "@/assets/Website Content/EP6_0001.JPG";
+import wallDetailHero from "@/assets/Website Content/Palacio-15.jpg";
 import { MediaHero } from "@/components/ui/design-system";
 
 const phoneNumber = "905-949-0555";
-const HERO_STILL_DURATION_MS = 4500;
-const HERO_CROSSFADE_SECONDS = 0.7;
+const HERO_STILL_DURATION_MS = 5000;
+const HERO_CROSSFADE_SECONDS = 1.2;
+
+const SOCIAL_LINKS = {
+  instagram: "https://www.instagram.com/palacioeventcentre",
+  facebook: "https://www.facebook.com/palacioeventcentre",
+  email: "mailto:sales@palacioeventcentre.com",
+};
 
 type HeroMediaItem = {
   src: string;
@@ -33,8 +39,8 @@ const heroMedia: HeroMediaItem[] = [
     durationMs: HERO_STILL_DURATION_MS,
   },
   {
-    src: arribaHero,
-    label: "Arriba room interior with natural light",
+    src: wallDetailHero,
+    label: "Elegant wall detail at Palacio Event Centre",
     durationMs: HERO_STILL_DURATION_MS,
   },
   {
@@ -50,11 +56,6 @@ const heroMedia: HeroMediaItem[] = [
   {
     src: ibizaHero,
     label: "Ibiza ballroom event configuration",
-    durationMs: HERO_STILL_DURATION_MS,
-  },
-  {
-    src: lobbyHero,
-    label: "Palacio Event Centre lobby interior",
     durationMs: HERO_STILL_DURATION_MS,
   },
 ];
@@ -110,7 +111,7 @@ const HeroMediaRotator = ({ scrollY }: { scrollY: number }) => {
 
   const activeItem = heroMedia[activeIndex];
   const motionStyle = {
-    transform: `scale(1.06) translateY(${scrollY * 0.08}px)`,
+    transform: `scale(1.1) translateY(${scrollY * 0.06}px)`,
   };
 
   return (
@@ -122,7 +123,7 @@ const HeroMediaRotator = ({ scrollY }: { scrollY: number }) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: HERO_CROSSFADE_SECONDS, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: HERO_CROSSFADE_SECONDS, ease: "linear" }}
         >
           <motion.img
             src={activeItem.src}
@@ -130,9 +131,9 @@ const HeroMediaRotator = ({ scrollY }: { scrollY: number }) => {
             aria-hidden="true"
             className="h-full w-full object-cover"
             style={motionStyle}
-            initial={{ scale: 1.1 }}
-            animate={{ scale: 1.06 }}
-            transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ scale: 1.15 }}
+            animate={{ scale: 1.1 }}
+            transition={{ duration: 2.5, ease: [0.22, 1, 0.36, 1] }}
             loading={activeItem.src === heroPoster ? "eager" : "lazy"}
             fetchPriority={activeItem.src === heroPoster ? "high" : "auto"}
             decoding="async"
@@ -156,10 +157,6 @@ const HeroSection = () => {
     <MediaHero
       variant="home"
       align="left"
-      eyebrow="Palacio Event Centre | Mississauga, Ontario"
-      title="Event Venue & Banquet Hall in Mississauga"
-      description="Palacio Event Centre is a luxury event venue and banquet hall in Mississauga for weddings, corporate events, and private celebrations with polished service and memorable spaces."
-      titleClassName="max-w-[11.5ch]"
       media={<HeroMediaRotator scrollY={scrollY} />}
     >
       <motion.div
@@ -184,7 +181,7 @@ const HeroSection = () => {
         initial={{ opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.8, duration: 0.7 }}
-        className="mt-5"
+        className="mt-5 pl-1"
       >
         <a
           href={`tel:${phoneNumber}`}
@@ -192,6 +189,40 @@ const HeroSection = () => {
         >
           <span className="hero-meta-text-soft">Call us directly:</span>
           <span>{phoneNumber}</span>
+        </a>
+      </motion.div>
+
+      {/* Social Links - Left Side */}
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 1.0, duration: 0.7 }}
+        className="mt-4 pl-1 flex items-center gap-4"
+      >
+        <a
+          href={SOCIAL_LINKS.instagram}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-ivory/70 transition-colors duration-300 hover:text-gold"
+          aria-label="Follow us on Instagram"
+        >
+          <Instagram size={20} strokeWidth={1.5} />
+        </a>
+        <a
+          href={SOCIAL_LINKS.facebook}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-ivory/70 transition-colors duration-300 hover:text-gold"
+          aria-label="Follow us on Facebook"
+        >
+          <Facebook size={20} strokeWidth={1.5} />
+        </a>
+        <a
+          href={SOCIAL_LINKS.email}
+          className="text-ivory/70 transition-colors duration-300 hover:text-gold"
+          aria-label="Send us an email"
+        >
+          <Mail size={20} strokeWidth={1.5} />
         </a>
       </motion.div>
 

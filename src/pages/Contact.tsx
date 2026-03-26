@@ -10,7 +10,7 @@ import {
   SectionHeading,
 } from "@/components/ui/design-system";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
-import heroImg from "@/assets/Website Content/IMG_0719 (1).jpg";
+import heroImg from "@/assets/Website Content/Palacio-15.jpg";
 import { buildLocalBusinessSchema } from "@/lib/seo";
 import InquiryForm from "@/components/InquiryForm";
 

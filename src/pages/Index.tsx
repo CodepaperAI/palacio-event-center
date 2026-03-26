@@ -6,7 +6,6 @@ import VenueSpaces from "@/components/VenueSpaces";
 import MenusPreview from "@/components/MenusPreview";
 import GalleryPreview from "@/components/GalleryPreview";
 import CTASection from "@/components/CTASection";
-import ContactForm from "@/components/ContactForm";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import heroBg from "@/assets/Website Content/IMG_3666.jpg";
@@ -33,7 +32,6 @@ const Index = () => {
       <EventTypes />
       <VenueOverview />
       <CTASection />
-      <ContactForm />
       <Footer />
     </div>
   );

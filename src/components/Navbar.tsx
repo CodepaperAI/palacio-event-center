@@ -119,9 +119,7 @@ const Navbar = ({ solid = false }: NavbarProps) => {
           <img
             src={logo}
             alt="Palacio Event Centre"
-            className={`h-10 w-auto transition-all duration-500 lg:h-11 ${
-              showSolid ? "filter-none" : "brightness-0 invert"
-            }`}
+            className="h-10 w-auto lg:h-11"
           />
         </Link>
 
@@ -268,27 +266,20 @@ const Navbar = ({ solid = false }: NavbarProps) => {
                               </p>
                               <div className="space-y-1">
                                 {group.items.map((item) => (
-                                  <div
+                                  <a
                                     key={item.label}
-                                    className="flex items-center gap-2 rounded-xl px-3 py-2.5 transition-all duration-200 hover:bg-gold/5"
+                                    href={item.pdfUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center justify-between rounded-xl px-3 py-2.5 transition-all duration-200 hover:bg-gold/5"
                                   >
-                                    <Link
-                                      to={item.href}
-                                      className="flex-1 text-sm text-foreground/72 transition-colors duration-200 hover:text-gold font-sans"
-                                    >
+                                    <span className="text-sm text-foreground/72 transition-colors duration-200 hover:text-gold font-sans">
                                       {item.label}
-                                    </Link>
-                                    {item.pdfUrl && (
-                                      <a
-                                        href={item.pdfUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="rounded-full border border-border/50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground transition-colors duration-200 hover:border-gold/35 hover:text-gold font-sans"
-                                      >
-                                        PDF
-                                      </a>
-                                    )}
-                                  </div>
+                                    </span>
+                                    <span className="rounded-full border border-border/50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground transition-colors duration-200 hover:border-gold/35 hover:text-gold font-sans">
+                                      PDF
+                                    </span>
+                                  </a>
                                 ))}
                               </div>
                             </div>
@@ -347,7 +338,7 @@ const Navbar = ({ solid = false }: NavbarProps) => {
                 exit={{ rotate: -90, opacity: 0 }}
                 transition={{ duration: 0.2 }}
               >
-                <Menu className="h-5 w-5" />
+                <Menu className="h-6 w-6" />
               </motion.div>
             )}
           </AnimatePresence>
@@ -419,24 +410,22 @@ const Navbar = ({ solid = false }: NavbarProps) => {
                                 View All
                               </Link>
                               {serviceGroups.flatMap((group) => group.items).map((item) => (
-                                <div key={item.label} className="flex items-center gap-2 rounded-xl px-3 py-2.5">
-                                  <Link
-                                    to={item.href}
-                                    className="flex-1 text-sm text-foreground/60 transition-colors hover:text-gold font-sans"
-                                  >
+                                <a
+                                  key={item.label}
+                                  href={item.pdfUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="flex items-center justify-between rounded-xl px-3 py-2.5"
+                                >
+                                  <span className="text-sm text-foreground/60 transition-colors hover:text-gold font-sans">
                                     {item.label}
-                                  </Link>
+                                  </span>
                                   {item.pdfUrl && (
-                                    <a
-                                      href={item.pdfUrl}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground transition-colors hover:text-gold font-sans"
-                                    >
+                                    <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground transition-colors hover:text-gold font-sans">
                                       PDF
-                                    </a>
+                                    </span>
                                   )}
-                                </div>
+                                </a>
                               ))}
                             </div>
                           </motion.div>
