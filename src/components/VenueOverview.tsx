@@ -13,23 +13,34 @@ const stats = [
 const VenueOverview = () => {
   return (
     <AnimatedSection id="about" bg="background" topDivider>
-      <div className="max-w-3xl mx-auto text-center mb-20">
-        <SectionHeading
-          eyebrow="About the Venue"
-          title="A Venue Designed for Memorable Celebrations"
-          description="Situated in the heart of Mississauga, Palacio Event Centre combines elegant interiors with versatile, flexible spaces that adapt to your vision. Whether you're planning an intimate gathering or a grand celebration for hundreds, our 30,000 sq. ft. venue with soaring 23-foot ceilings provides the ideal canvas for any occasion."
-        />
-      </div>
-
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
-        {stats.map((stat) => (
-          <StatCard
-            key={stat.label}
-            icon={<stat.icon className="w-7 h-7 text-gold" strokeWidth={1.5} />}
-            value={stat.value}
-            label={stat.label}
+      <div className="grid items-start gap-10 lg:grid-cols-[1.1fr_0.9fr] xl:gap-16">
+        <div>
+          <SectionHeading
+            eyebrow="Venue Credibility"
+            title="A Venue Designed to Feel Grand From the First Arrival"
+            description="Situated in the heart of Mississauga, Palacio Event Centre combines elegant interiors, strong operational flexibility, and a polished guest experience that scales beautifully across celebration types."
+            align="left"
           />
-        ))}
+          <motion.div variants={fadeUpVariants} className="max-w-xl space-y-5 text-base text-muted-foreground font-sans sm:text-lg">
+            <p>
+              From statement weddings to executive galas, the venue is designed to carry atmosphere, movement, and service with ease.
+            </p>
+            <p>
+              Soaring ceilings, generous square footage, and versatile space planning make Palacio an ideal canvas for events that need both presence and precision.
+            </p>
+          </motion.div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-5 md:gap-6">
+          {stats.map((stat) => (
+            <StatCard
+              key={stat.label}
+              icon={<stat.icon className="w-7 h-7 text-gold" strokeWidth={1.5} />}
+              value={stat.value}
+              label={stat.label}
+            />
+          ))}
+        </div>
       </div>
     </AnimatedSection>
   );

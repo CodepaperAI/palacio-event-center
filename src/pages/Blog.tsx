@@ -1,17 +1,20 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Button } from "@/components/ui/button";
+import SEO from "@/components/SEO";
 import { motion } from "framer-motion";
 import { fadeUpVariants } from "@/hooks/useScrollAnimation";
-import { AnimatedSection, SectionHeading } from "@/components/ui/design-system";
-import { blogPosts, blogCategories, type BlogPost } from "@/data/blogs";
-import { ArrowRight, Calendar, User } from "lucide-react";
+import { AnimatedSection, PageHero, SectionHeading, SiteCtaSection } from "@/components/ui/design-system";
+import { blogPosts, type BlogPost } from "@/data/blogs";
+import { ArrowRight, Calendar, Clock3, User } from "lucide-react";
+import { format } from "date-fns";
 
-import heroImg from "@/assets/hero-ballroom.jpg";
+import heroImg from "@/assets/Website Content/IMG_3670.jpg";
 
 const BlogCard = ({ post, index }: { post: BlogPost; index: number }) => {
+  const postLabel = post.category ?? "Article";
+
   return (
     <motion.article
       variants={fadeUpVariants}
@@ -31,7 +34,7 @@ const BlogCard = ({ post, index }: { post: BlogPost; index: number }) => {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-charcoal/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         <span className="absolute top-4 left-4 bg-gold text-charcoal text-xs font-semibold tracking-[0.15em] uppercase px-3 py-1 rounded-full font-sans">
-          {post.category}
+          {postLabel}
         </span>
       </Link>
 
@@ -40,21 +43,25 @@ const BlogCard = ({ post, index }: { post: BlogPost; index: number }) => {
         <div className="flex items-center gap-4 text-xs text-muted-foreground mb-3 font-sans">
           <span className="flex items-center gap-1.5">
             <Calendar className="w-3.5 h-3.5" />
-            {post.date}
+            {format(new Date(post.publishedAt), "MMMM d, yyyy")}
           </span>
           <span className="flex items-center gap-1.5">
             <User className="w-3.5 h-3.5" />
             {post.author}
           </span>
+          <span className="flex items-center gap-1.5">
+            <Clock3 className="w-3.5 h-3.5" />
+            {post.readingTime}
+          </span>
         </div>
 
         <Link to={`/blog/${post.slug}`}>
-          <h3 className="font-serif text-xl text-foreground mb-3 group-hover:text-gold transition-colors duration-300 line-clamp-2 leading-tight">
+          <h3 className="font-sans text-[1.25rem] text-foreground mb-3 group-hover:text-gold transition-colors duration-300 line-clamp-2">
             {post.title}
           </h3>
         </Link>
 
-        <p className="text-muted-foreground text-sm leading-relaxed mb-4 font-sans line-clamp-3">
+        <p className="text-muted-foreground text-sm mb-4 font-sans line-clamp-3">
           {post.excerpt}
         </p>
 
@@ -71,138 +78,124 @@ const BlogCard = ({ post, index }: { post: BlogPost; index: number }) => {
 };
 
 const Blog = () => {
-  const [activeCategory, setActiveCategory] = useState("All");
+  const [currentPage, setCurrentPage] = useState(1);
+  const postsPerPage = 8;
 
-  const filteredPosts =
-    activeCategory === "All"
-      ? blogPosts
-      : blogPosts.filter((post) => post.category === activeCategory);
+  const totalPages = Math.max(1, Math.ceil(blogPosts.length / postsPerPage));
+  const paginatedPosts = useMemo(() => {
+    const startIndex = (currentPage - 1) * postsPerPage;
+    return blogPosts.slice(startIndex, startIndex + postsPerPage);
+  }, [currentPage]);
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
+
+  const goToPage = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
     <div className="min-h-screen">
+      <SEO
+        title="Event Planning Blog | Palacio Event Centre Mississauga"
+        description="Read event planning tips, venue inspiration, and celebration ideas from Palacio Event Centre in Mississauga."
+        pathname="/blog"
+        image={heroImg}
+      />
       <Navbar />
 
-      {/* SEO: Page Title */}
-      <title>Blog | Palacio Event Centre - Event Planning Tips & Trends</title>
-      <meta
-        name="description"
-        content="Discover expert event planning tips, wedding trends, corporate event ideas, and celebration inspiration from Palacio Event Centre's professional event planners."
+      <PageHero
+        eyebrow="Insights & Inspiration"
+        title="Our Blog"
+        image={heroImg}
+        alt="Elegant Palacio Event Centre lobby interior in Mississauga used as the blog hero image"
+        align="center"
       />
-
-      {/* Hero */}
-      <section className="relative h-[60vh] min-h-[420px] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0">
-          <img
-            src={heroImg}
-            alt="Palacio Grand Ballroom"
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-charcoal/50 via-charcoal/60 to-charcoal/80" />
-          <div className="absolute inset-0 bg-gradient-to-r from-charcoal/30 via-transparent to-charcoal/30" />
-        </div>
-        <div className="relative z-10 text-center px-4 sm:px-6 max-w-4xl mx-auto">
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="text-gold-light text-sm sm:text-base font-sans tracking-[0.35em] uppercase mb-6"
-          >
-            Insights & Inspiration
-          </motion.p>
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-            className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-ivory font-medium leading-[1.1]"
-          >
-            Our Blog
-          </motion.h1>
-        </div>
-      </section>
 
       {/* Blog Grid */}
       <AnimatedSection bg="background" topDivider>
         <SectionHeading
           eyebrow="Latest Articles"
           title="Event Planning Tips & Trends"
-          description="Expert advice, creative ideas, and insider tips for planning unforgettable events at Palacio."
+          description="Published articles imported from Palacio's official WordPress blog archive, now available directly inside the website."
         />
 
-        {/* Category Filters */}
-        <motion.div
-          variants={fadeUpVariants}
-          className="flex flex-wrap justify-center gap-3 mb-12"
-        >
-          {blogCategories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              className={`px-5 py-2 rounded-full text-xs tracking-[0.2em] uppercase font-semibold font-sans border transition-all duration-300 ${
-                activeCategory === cat
-                  ? "bg-gold text-charcoal border-gold"
-                  : "bg-transparent text-muted-foreground border-border/50 hover:border-gold/40 hover:text-foreground"
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
+        <motion.div variants={fadeUpVariants} className="mb-10 text-center">
+          <p className="text-sm text-muted-foreground font-sans">
+            Showing {Math.min((currentPage - 1) * postsPerPage + 1, blogPosts.length)}-
+            {Math.min(currentPage * postsPerPage, blogPosts.length)} of {blogPosts.length} articles
+          </p>
         </motion.div>
 
         {/* Blog Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          {filteredPosts.map((post, index) => (
+          {paginatedPosts.map((post, index) => (
             <BlogCard key={post.id} post={post} index={index} />
           ))}
         </div>
 
         {/* Empty State */}
-        {filteredPosts.length === 0 && (
+        {blogPosts.length === 0 && (
           <div className="text-center py-16">
             <p className="text-muted-foreground text-lg">
-              No articles found in this category.
+              No articles are available right now.
             </p>
           </div>
         )}
+
+        {blogPosts.length > postsPerPage && (
+          <motion.div
+            variants={fadeUpVariants}
+            className="mt-12 flex flex-wrap items-center justify-center gap-3"
+          >
+            <button
+              onClick={() => goToPage(Math.max(1, currentPage - 1))}
+              disabled={currentPage === 1}
+              className="rounded-full border border-border/50 px-5 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground transition-all duration-300 hover:border-gold/40 hover:text-foreground disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              Previous
+            </button>
+
+            {Array.from({ length: totalPages }, (_, index) => {
+              const pageNumber = index + 1;
+
+              return (
+                <button
+                  key={pageNumber}
+                  onClick={() => goToPage(pageNumber)}
+                  className={`h-11 min-w-11 rounded-full border px-4 text-xs font-semibold uppercase tracking-[0.18em] transition-all duration-300 ${
+                    currentPage === pageNumber
+                      ? "border-gold bg-gold text-charcoal"
+                      : "border-border/50 text-muted-foreground hover:border-gold/40 hover:text-foreground"
+                  }`}
+                >
+                  {pageNumber}
+                </button>
+              );
+            })}
+
+            <button
+              onClick={() => goToPage(Math.min(totalPages, currentPage + 1))}
+              disabled={currentPage === totalPages}
+              className="rounded-full border border-border/50 px-5 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground transition-all duration-300 hover:border-gold/40 hover:text-foreground disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              Next
+            </button>
+          </motion.div>
+        )}
       </AnimatedSection>
 
-      {/* Newsletter CTA */}
-      <section className="section-padding bg-charcoal relative overflow-hidden">
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
-        <div
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 1px 1px, hsl(40 45% 60%) 1px, transparent 0)",
-            backgroundSize: "40px 40px",
-          }}
-        />
-        <div className="container-luxury text-center relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
-          >
-            <p className="eyebrow">Stay Updated</p>
-            <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-ivory mb-8">
-              Subscribe to Our Newsletter
-            </h2>
-            <p className="text-ivory/60 text-lg max-w-xl mx-auto mb-12 leading-relaxed font-sans">
-              Get the latest event planning tips, trends, and exclusive offers delivered to your inbox.
-            </p>
-            <Link to="/contact">
-              <Button
-                variant="gold"
-                size="xl"
-                className="shadow-glow-gold"
-              >
-                Get in Touch
-              </Button>
-            </Link>
-          </motion.div>
-        </div>
-      </section>
+      <SiteCtaSection
+        eyebrow="Plan With Confidence"
+        title="Talk Through Your Event Vision"
+        description="When the inspiration is there, our team can help turn it into a clear venue plan, menu direction, and guest experience."
+        buttonLabel="Get in Touch"
+        buttonTo="/contact"
+      />
 
       <Footer />
     </div>

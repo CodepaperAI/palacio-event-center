@@ -1,49 +1,53 @@
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Menu, X, ChevronDown } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ChevronDown, Menu, Phone, X } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import logo from "@/assets/palacio-logo.png";
+import { cuisineMenuCollections, serviceMenuCollections } from "@/data/menuCollections";
 
-const menuCategories = [
+const phoneNumber = "905-949-0555";
+
+const spacesLinks = [
+  { label: "Explore Spaces", href: "/#spaces" },
+  { label: "Ibiza Grand Ballroom", href: "/spaces/ibiza-grand-ballroom" },
+  { label: "Ibiza A", href: "/spaces/ibiza-a" },
+  { label: "Ibiza B", href: "/spaces/ibiza-b" },
+  { label: "Arriba", href: "/spaces/arriba" },
+];
+
+const eventLinks = [
+  { label: "Weddings", href: "/weddings" },
+  { label: "Social Events", href: "/social-events" },
+  { label: "Corporate Events", href: "/corporate-events" },
+];
+
+const serviceGroups = [
   {
-    group: "Asian Cuisine",
-    items: [
-      { label: "South Asian", href: "/menus/south-asian" },
-      { label: "Pakistani Halal", href: "/menus/pakistani-halal" },
-      { label: "Gujarati", href: "/menus/gujarati" },
-    ],
+    group: "Cuisine Menus",
+    items: cuisineMenuCollections.map((item) => ({
+      label: item.title,
+      href: item.route,
+      pdfUrl: item.pdfUrl,
+    })),
   },
   {
-    group: "International",
+    group: "Services",
     items: [
-      { label: "European", href: "/menus/european" },
-      { label: "Middle Eastern", href: "/menus/middle-eastern" },
-      { label: "Caribbean", href: "/menus/caribbean" },
-    ],
-  },
-  {
-    group: "Packages",
-    items: [
-      { label: "Bar Packages", href: "/menus/bar-packages" },
-      { label: "Outside Catering", href: "/menus/outside-catering" },
-      { label: "Holiday / Prom", href: "/menus/holiday-prom" },
+      ...serviceMenuCollections.map((item) => ({
+        label: item.title,
+        href: item.route,
+        pdfUrl: item.pdfUrl,
+      })),
+      { label: "About Palacio", href: "/about" },
     ],
   },
 ];
 
 const navLinks = [
-  { label: "Home", href: "/" },
-  { label: "About", href: "/about" },
-  {
-    label: "Events",
-    href: "/weddings",
-    children: [
-      { label: "Weddings", href: "/weddings" },
-      { label: "Social Events", href: "/social-events" },
-      { label: "Corporate Events", href: "/corporate-events" },
-    ],
-  },
-  { label: "Menus", href: "/menus", hasMegaMenu: true },
+  { label: "Spaces", href: "/#spaces", children: spacesLinks },
+  { label: "Events", href: "/weddings", children: eventLinks },
+  { label: "Menu", href: "/menus", hasMegaMenu: true },
   { label: "Gallery", href: "/gallery" },
   { label: "Blog", href: "/blog" },
   { label: "Contact", href: "/contact" },
@@ -55,11 +59,13 @@ interface NavbarProps {
 
 const Navbar = ({ solid = false }: NavbarProps) => {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [mobileMenusOpen, setMobileMenusOpen] = useState(false);
+  const [mobileSpacesOpen, setMobileSpacesOpen] = useState(false);
   const [mobileEventsOpen, setMobileEventsOpen] = useState(false);
+  const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [megaMenuOpen, setMegaMenuOpen] = useState(false);
+  const [spacesDropdownOpen, setSpacesDropdownOpen] = useState(false);
   const [eventsDropdownOpen, setEventsDropdownOpen] = useState(false);
+  const [servicesMenuOpen, setServicesMenuOpen] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -68,74 +74,141 @@ const Navbar = ({ solid = false }: NavbarProps) => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close mobile menu on route change
   useEffect(() => {
     setMobileOpen(false);
-  }, [location.pathname]);
+  }, [location.pathname, location.hash]);
 
   const showSolid = solid || scrolled;
 
   const isActive = (href: string) => {
-    if (href === "/") return location.pathname === "/";
-    return location.pathname.startsWith(href);
+    if (href.includes("#")) {
+      const [path, hash] = href.split("#");
+      const targetPath = path || "/";
+      return location.pathname === targetPath && location.hash === `#${hash}`;
+    }
+
+    return href === "/" ? location.pathname === "/" : location.pathname.startsWith(href);
   };
+
+  const desktopLinkClass = (active: boolean) =>
+    `relative flex min-h-11 items-center gap-1.5 rounded-full px-4 py-2 text-[11px] font-medium uppercase tracking-[0.14em] transition-all duration-300 ${
+      active
+        ? showSolid
+          ? "bg-gold/12 text-charcoal"
+          : "bg-white/10 text-white"
+        : showSolid
+          ? "text-charcoal/82 hover:bg-charcoal/5 hover:text-charcoal"
+          : "text-white hover:bg-white/12 hover:text-white"
+    }`;
+
+  const mobileAccordionButtonClass = (open: boolean) =>
+    `flex w-full items-center justify-between rounded-2xl px-3 py-3.5 text-sm font-medium transition-all duration-300 ${
+      open ? "bg-gold/5 text-gold" : "text-foreground/72 hover:bg-foreground/[0.03] hover:text-foreground"
+    }`;
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-out bg-background border-b border-border/30 shadow-soft`}
+      className={`fixed left-0 right-0 top-0 z-50 transition-all duration-500 ease-out ${
+        showSolid
+          ? "bg-white shadow-soft backdrop-blur-xl"
+          : "bg-charcoal/58 shadow-none backdrop-blur-md"
+      }`}
     >
-      <div className="container-luxury flex items-center justify-between h-20 lg:h-22">
-        {/* Logo */}
-        <Link
-          to="/"
-          className="font-serif text-xl lg:text-2xl font-semibold tracking-wide text-foreground"
-        >
-          Palacio
-          <span className="hidden sm:inline text-muted-foreground">
-            {" "}Event Centre
-          </span>
+      <div className="container-luxury flex h-20 items-center justify-between gap-4 lg:h-[5.4rem]">
+        <Link to="/" className="flex items-center">
+          <img
+            src={logo}
+            alt="Palacio Event Centre"
+            className={`h-10 w-auto transition-all duration-500 lg:h-11 ${
+              showSolid ? "filter-none" : "brightness-0 invert"
+            }`}
+          />
         </Link>
 
-        {/* Desktop Nav */}
-        <div className="hidden xl:flex items-center gap-1">
+        <div className="hidden items-center gap-2 lg:flex xl:hidden">
+          <a
+            href={`tel:${phoneNumber}`}
+            className={`inline-flex min-h-11 items-center justify-center rounded-full border px-3 py-2 transition-all duration-300 ${
+              showSolid
+                ? "border-charcoal/12 bg-charcoal/[0.03] text-charcoal/82 hover:border-gold/35 hover:bg-gold/5 hover:text-charcoal"
+                : "border-white/40 bg-white/8 text-white hover:border-white/60 hover:bg-white/12 hover:text-white"
+            }`}
+            aria-label="Call Palacio Event Centre"
+          >
+            <Phone className="h-4 w-4" />
+          </a>
+          <Link to="/contact">
+            <Button variant={showSolid ? "gold" : "goldOutline"} size="sm">
+              Book Consultation
+            </Button>
+          </Link>
+        </div>
+
+        <div className="hidden items-center gap-1.5 xl:flex">
           {navLinks.map((link) => (
             <div
               key={link.label}
               className="relative"
               onMouseEnter={() => {
-                if (link.hasMegaMenu) setMegaMenuOpen(true);
-                if (link.children) setEventsDropdownOpen(true);
+                if (link.label === "Spaces") setSpacesDropdownOpen(true);
+                if (link.label === "Events") setEventsDropdownOpen(true);
+                if (link.hasMegaMenu) setServicesMenuOpen(true);
               }}
               onMouseLeave={() => {
-                if (link.hasMegaMenu) setMegaMenuOpen(false);
-                if (link.children) setEventsDropdownOpen(false);
+                if (link.label === "Spaces") setSpacesDropdownOpen(false);
+                if (link.label === "Events") setEventsDropdownOpen(false);
+                if (link.hasMegaMenu) setServicesMenuOpen(false);
               }}
             >
-              <Link
-                to={link.href}
-                className={`relative px-4 py-2 text-[12px] font-medium tracking-[0.15em] uppercase transition-all duration-300 flex items-center gap-1.5 rounded-lg ${
-                  isActive(link.href)
-                    ? "text-foreground"
-                    : "text-muted-foreground hover:text-foreground hover:bg-foreground/[0.03]"
-                }`}
-              >
+              <Link to={link.href} className={desktopLinkClass(isActive(link.href))}>
                 {link.label}
-                {(link.hasMegaMenu || link.children) && (
-                  <ChevronDown className={`w-3 h-3 transition-transform duration-300 ${
-                    (link.hasMegaMenu && megaMenuOpen) || (link.children && eventsDropdownOpen) ? "rotate-180" : ""
-                  }`} />
+                {(link.children || link.hasMegaMenu) && (
+                  <ChevronDown
+                    className={`h-3 w-3 transition-transform duration-300 ${
+                      (link.label === "Spaces" && spacesDropdownOpen) ||
+                      (link.label === "Events" && eventsDropdownOpen) ||
+                      (link.hasMegaMenu && servicesMenuOpen)
+                        ? "rotate-180"
+                        : ""
+                    }`}
+                  />
                 )}
                 {isActive(link.href) && (
                   <motion.span
                     layoutId="nav-indicator"
-                    className="absolute bottom-0 left-4 right-4 h-px bg-gold"
+                    className="absolute bottom-1.5 left-4 right-4 h-px bg-gold"
                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
                   />
                 )}
               </Link>
 
-              {/* Events Dropdown */}
-              {link.children && (
+              {link.label === "Spaces" && link.children && (
+                <AnimatePresence>
+                  {spacesDropdownOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 6, scale: 0.98 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 6, scale: 0.98 }}
+                      transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                      className="absolute top-full left-0 pt-2"
+                    >
+                      <div className="card-panel min-w-[230px] rounded-[1.35rem] p-2">
+                        {link.children.map((child) => (
+                          <Link
+                            key={child.label}
+                            to={child.href}
+                            className="block rounded-xl px-4 py-3 text-[11px] uppercase tracking-[0.16em] text-foreground/72 transition-all duration-200 hover:bg-gold/5 hover:text-gold"
+                          >
+                            {child.label}
+                          </Link>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              )}
+
+              {link.label === "Events" && link.children && (
                 <AnimatePresence>
                   {eventsDropdownOpen && (
                     <motion.div
@@ -145,15 +218,15 @@ const Navbar = ({ solid = false }: NavbarProps) => {
                       transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
                       className="absolute top-full left-0 pt-2"
                     >
-                      <div className="bg-background border border-border/50 rounded-xl shadow-luxury p-2 min-w-[200px]">
+                      <div className="card-panel min-w-[230px] rounded-[1.35rem] p-2">
                         {link.children.map((child) => (
                           <Link
                             key={child.label}
                             to={child.href}
-                            className={`block px-4 py-2.5 text-[12px] tracking-wider uppercase rounded-lg transition-all duration-200 ${
+                            className={`block rounded-xl px-4 py-3 text-[11px] uppercase tracking-[0.16em] transition-all duration-200 ${
                               isActive(child.href)
-                                ? "text-gold bg-gold/5"
-                                : "text-foreground/70 hover:text-gold hover:bg-gold/5"
+                                ? "bg-gold/5 text-gold"
+                                : "text-foreground/72 hover:bg-gold/5 hover:text-gold"
                             }`}
                           >
                             {child.label}
@@ -165,10 +238,9 @@ const Navbar = ({ solid = false }: NavbarProps) => {
                 </AnimatePresence>
               )}
 
-              {/* Mega Menu */}
               {link.hasMegaMenu && (
                 <AnimatePresence>
-                  {megaMenuOpen && (
+                  {servicesMenuOpen && (
                     <motion.div
                       initial={{ opacity: 0, y: 6, scale: 0.98 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -176,33 +248,47 @@ const Navbar = ({ solid = false }: NavbarProps) => {
                       transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
                       className="absolute top-full -left-20 pt-2"
                     >
-                      <div className="bg-background border border-border/50 rounded-2xl shadow-luxury p-8 min-w-[520px]">
-                        <div className="flex items-center justify-between mb-6">
-                          <p className="text-[11px] font-semibold tracking-[0.25em] uppercase text-gold font-sans">
-                            Our Menus
+                      <div className="card-panel-strong min-w-[580px] p-8">
+                        <div className="mb-6 flex items-center justify-between">
+                          <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-gold font-sans">
+                            Menu
                           </p>
                           <Link
                             to="/menus"
-                            className="text-[11px] font-medium tracking-wider uppercase text-muted-foreground hover:text-gold transition-colors font-sans"
+                            className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground transition-colors hover:text-gold font-sans"
                           >
-                            View All →
+                            View All
                           </Link>
                         </div>
-                        <div className="grid grid-cols-3 gap-8">
-                          {menuCategories.map((group) => (
+                        <div className="grid grid-cols-2 gap-8">
+                          {serviceGroups.map((group) => (
                             <div key={group.group}>
-                              <p className="text-[10px] font-semibold tracking-[0.2em] uppercase text-muted-foreground/60 mb-3 font-sans">
+                              <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground/60 font-sans">
                                 {group.group}
                               </p>
-                              <div className="space-y-0.5">
+                              <div className="space-y-1">
                                 {group.items.map((item) => (
-                                  <Link
+                                  <div
                                     key={item.label}
-                                    to={item.href}
-                                    className="block px-3 py-2 text-sm text-foreground/70 hover:text-gold hover:bg-gold/5 rounded-lg transition-all duration-200 font-sans"
+                                    className="flex items-center gap-2 rounded-xl px-3 py-2.5 transition-all duration-200 hover:bg-gold/5"
                                   >
-                                    {item.label}
-                                  </Link>
+                                    <Link
+                                      to={item.href}
+                                      className="flex-1 text-sm text-foreground/72 transition-colors duration-200 hover:text-gold font-sans"
+                                    >
+                                      {item.label}
+                                    </Link>
+                                    {item.pdfUrl && (
+                                      <a
+                                        href={item.pdfUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="rounded-full border border-border/50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground transition-colors duration-200 hover:border-gold/35 hover:text-gold font-sans"
+                                      >
+                                        PDF
+                                      </a>
+                                    )}
+                                  </div>
                                 ))}
                               </div>
                             </div>
@@ -215,34 +301,59 @@ const Navbar = ({ solid = false }: NavbarProps) => {
               )}
             </div>
           ))}
-          <Link to="/contact" className="ml-3">
-            <Button variant="gold" size="sm">
-              Get a Quote
+
+          <a
+            href={`tel:${phoneNumber}`}
+            className={`ml-1 inline-flex min-h-11 items-center gap-2 rounded-full border px-4 py-2 text-[11px] font-medium uppercase tracking-[0.14em] transition-all duration-300 ${
+              showSolid
+                ? "border-charcoal/12 bg-charcoal/[0.03] text-charcoal/82 hover:border-gold/35 hover:bg-gold/5 hover:text-charcoal"
+                : "border-white/40 bg-white/8 text-white hover:border-white/60 hover:bg-white/12 hover:text-white"
+            }`}
+          >
+            <Phone className="h-3.5 w-3.5" />
+            {phoneNumber}
+          </a>
+
+          <Link to="/contact" className="ml-1">
+            <Button variant="goldOutline" size="sm">
+              Book Consultation
             </Button>
           </Link>
         </div>
 
-        {/* Mobile Toggle */}
         <button
-          className="xl:hidden p-2 rounded-lg transition-all duration-300 text-foreground hover:bg-foreground/5"
+          className={`touch-target rounded-full p-2 transition-all duration-300 xl:hidden ${
+            showSolid ? "text-foreground hover:bg-foreground/5" : "text-white hover:bg-white/10"
+          }`}
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label="Toggle menu"
         >
           <AnimatePresence mode="wait">
             {mobileOpen ? (
-              <motion.div key="close" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.2 }}>
-                <X className="w-5 h-5" />
+              <motion.div
+                key="close"
+                initial={{ rotate: -90, opacity: 0 }}
+                animate={{ rotate: 0, opacity: 1 }}
+                exit={{ rotate: 90, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <X className="h-5 w-5" />
               </motion.div>
             ) : (
-              <motion.div key="open" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.2 }}>
-                <Menu className="w-5 h-5" />
+              <motion.div
+                key="open"
+                initial={{ rotate: 90, opacity: 0 }}
+                animate={{ rotate: 0, opacity: 1 }}
+                exit={{ rotate: -90, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <Menu className="h-5 w-5" />
               </motion.div>
             )}
           </AnimatePresence>
         </button>
       </div>
 
-      {/* Mobile Menu */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
@@ -250,24 +361,19 @@ const Navbar = ({ solid = false }: NavbarProps) => {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            className="xl:hidden bg-background/98 backdrop-blur-2xl border-t border-border/30 overflow-hidden"
+            className="xl:hidden overflow-hidden border-t border-border/30 bg-background/98 backdrop-blur-2xl"
           >
-            <div className="container-luxury py-6 space-y-0.5">
+            <div className="container-luxury space-y-1 py-6">
               {navLinks.map((link) => (
                 <div key={link.label}>
-                  {link.hasMegaMenu ? (
+                  {link.label === "Spaces" ? (
                     <>
-                      <button
-                        onClick={() => setMobileMenusOpen(!mobileMenusOpen)}
-                        className={`flex items-center justify-between w-full py-3.5 px-3 text-sm font-medium rounded-xl transition-all duration-300 ${
-                          mobileMenusOpen ? "text-gold bg-gold/5" : "text-foreground/70 hover:text-foreground hover:bg-foreground/[0.03]"
-                        }`}
-                      >
-                        <span className="tracking-wider uppercase text-[12px]">{link.label}</span>
-                        <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${mobileMenusOpen ? "rotate-180" : ""}`} />
+                      <button onClick={() => setMobileSpacesOpen(!mobileSpacesOpen)} className={mobileAccordionButtonClass(mobileSpacesOpen)}>
+                        <span className="text-[12px] font-medium uppercase tracking-wider">{link.label}</span>
+                        <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${mobileSpacesOpen ? "rotate-180" : ""}`} />
                       </button>
                       <AnimatePresence>
-                        {mobileMenusOpen && (
+                        {mobileSpacesOpen && (
                           <motion.div
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: "auto" }}
@@ -275,21 +381,62 @@ const Navbar = ({ solid = false }: NavbarProps) => {
                             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
                             className="overflow-hidden"
                           >
-                            <div className="pl-4 pb-2 space-y-1">
+                            <div className="space-y-1 pb-2 pl-4">
+                              {spacesLinks.map((child) => (
+                                <Link
+                                  key={child.label}
+                                  to={child.href}
+                                  className="block rounded-xl px-3 py-2.5 text-sm text-foreground/60 transition-colors hover:text-gold font-sans"
+                                >
+                                  {child.label}
+                                </Link>
+                              ))}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </>
+                  ) : link.hasMegaMenu ? (
+                    <>
+                      <button onClick={() => setMobileServicesOpen(!mobileServicesOpen)} className={mobileAccordionButtonClass(mobileServicesOpen)}>
+                        <span className="text-[12px] font-medium uppercase tracking-wider">{link.label}</span>
+                        <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${mobileServicesOpen ? "rotate-180" : ""}`} />
+                      </button>
+                      <AnimatePresence>
+                        {mobileServicesOpen && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                            className="overflow-hidden"
+                          >
+                            <div className="space-y-1 pb-2 pl-4">
                               <Link
                                 to="/menus"
-                                className="block py-2 px-3 text-[11px] tracking-wider uppercase font-medium text-gold rounded-lg"
+                                className="block rounded-xl px-3 py-2 text-[11px] font-medium uppercase tracking-wider text-gold"
                               >
-                                All Menus →
+                                View All
                               </Link>
-                              {menuCategories.flatMap((g) => g.items).map((item) => (
-                                <Link
-                                  key={item.label}
-                                  to={item.href}
-                                  className="block py-2 px-3 text-sm text-foreground/60 hover:text-gold transition-colors rounded-lg font-sans"
-                                >
-                                  {item.label}
-                                </Link>
+                              {serviceGroups.flatMap((group) => group.items).map((item) => (
+                                <div key={item.label} className="flex items-center gap-2 rounded-xl px-3 py-2.5">
+                                  <Link
+                                    to={item.href}
+                                    className="flex-1 text-sm text-foreground/60 transition-colors hover:text-gold font-sans"
+                                  >
+                                    {item.label}
+                                  </Link>
+                                  {item.pdfUrl && (
+                                    <a
+                                      href={item.pdfUrl}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground transition-colors hover:text-gold font-sans"
+                                    >
+                                      PDF
+                                    </a>
+                                  )}
+                                </div>
                               ))}
                             </div>
                           </motion.div>
@@ -298,14 +445,9 @@ const Navbar = ({ solid = false }: NavbarProps) => {
                     </>
                   ) : link.children ? (
                     <>
-                      <button
-                        onClick={() => setMobileEventsOpen(!mobileEventsOpen)}
-                        className={`flex items-center justify-between w-full py-3.5 px-3 text-sm font-medium rounded-xl transition-all duration-300 ${
-                          mobileEventsOpen ? "text-gold bg-gold/5" : "text-foreground/70 hover:text-foreground hover:bg-foreground/[0.03]"
-                        }`}
-                      >
-                        <span className="tracking-wider uppercase text-[12px]">{link.label}</span>
-                        <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${mobileEventsOpen ? "rotate-180" : ""}`} />
+                      <button onClick={() => setMobileEventsOpen(!mobileEventsOpen)} className={mobileAccordionButtonClass(mobileEventsOpen)}>
+                        <span className="text-[12px] font-medium uppercase tracking-wider">{link.label}</span>
+                        <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${mobileEventsOpen ? "rotate-180" : ""}`} />
                       </button>
                       <AnimatePresence>
                         {mobileEventsOpen && (
@@ -316,12 +458,12 @@ const Navbar = ({ solid = false }: NavbarProps) => {
                             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
                             className="overflow-hidden"
                           >
-                            <div className="pl-4 pb-2 space-y-1">
+                            <div className="space-y-1 pb-2 pl-4">
                               {link.children.map((child) => (
                                 <Link
                                   key={child.label}
                                   to={child.href}
-                                  className="block py-2 px-3 text-sm text-foreground/60 hover:text-gold transition-colors rounded-lg font-sans"
+                                  className="block rounded-xl px-3 py-2.5 text-sm text-foreground/60 transition-colors hover:text-gold font-sans"
                                 >
                                   {child.label}
                                 </Link>
@@ -334,8 +476,10 @@ const Navbar = ({ solid = false }: NavbarProps) => {
                   ) : (
                     <Link
                       to={link.href}
-                      className={`block py-3.5 px-3 text-[12px] tracking-wider uppercase font-medium rounded-xl transition-all duration-300 ${
-                        isActive(link.href) ? "text-gold bg-gold/5" : "text-foreground/70 hover:text-foreground hover:bg-foreground/[0.03]"
+                      className={`block rounded-2xl px-3 py-3.5 text-[12px] font-medium uppercase tracking-wider transition-all duration-300 ${
+                        isActive(link.href)
+                          ? "bg-gold/5 text-gold"
+                          : "text-foreground/72 hover:bg-foreground/[0.03] hover:text-foreground"
                       }`}
                     >
                       {link.label}
@@ -343,10 +487,18 @@ const Navbar = ({ solid = false }: NavbarProps) => {
                   )}
                 </div>
               ))}
-              <div className="pt-4 px-3">
+
+              <div className="px-3 pt-4">
+                <a
+                  href={`tel:${phoneNumber}`}
+                  className="mb-3 flex min-h-11 w-full items-center justify-center gap-2 rounded-full border border-border/60 py-3 text-sm text-muted-foreground transition-all duration-300 hover:border-gold/30 hover:text-gold font-sans"
+                >
+                  <Phone className="h-4 w-4" />
+                  {phoneNumber}
+                </a>
                 <Link to="/contact">
                   <Button variant="gold" className="w-full">
-                    Get a Quote
+                    Book Consultation
                   </Button>
                 </Link>
               </div>

@@ -1,0 +1,128 @@
+import {
+  Globe,
+  Lamp,
+  Leaf,
+  PartyPopper,
+  Salad,
+  Sparkles,
+  Truck,
+  UtensilsCrossed,
+  Wine,
+  type LucideIcon,
+} from "lucide-react";
+
+export type MenuCollectionGroup = "Cuisine Menus" | "Services";
+
+export interface MenuCollection {
+  slug: string;
+  title: string;
+  route: string;
+  pdfUrl: string;
+  description: string;
+  group: MenuCollectionGroup;
+  icon: LucideIcon;
+}
+
+export const menuCollections: MenuCollection[] = [
+  {
+    slug: "south-asian",
+    title: "South Asian",
+    route: "/menus/south-asian",
+    pdfUrl: "https://palacioeventcentre.com/wp-content/uploads/2022/06/SOUTH-ASIAN-MENU-1.pdf",
+    description:
+      "Rich, aromatic dishes spanning traditional Indian, Bangladeshi, and Sri Lankan culinary traditions.",
+    group: "Cuisine Menus",
+    icon: UtensilsCrossed,
+  },
+  {
+    slug: "pakistani-halal",
+    title: "Pakistani Halal",
+    route: "/menus/pakistani-halal",
+    pdfUrl: "https://palacioeventcentre.com/wp-content/uploads/2022/08/PAKISTANI-HALAL-MENU.pdf",
+    description:
+      "Certified Halal cuisine with bold Pakistani flavours, refined presentation, and celebration-ready service.",
+    group: "Cuisine Menus",
+    icon: Leaf,
+  },
+  {
+    slug: "european",
+    title: "European",
+    route: "/menus/european",
+    pdfUrl: "https://palacioeventcentre.com/wp-content/uploads/2022/06/EUROPEAN-MENU-PACKAGE.pdf",
+    description:
+      "Classic Continental menus with polished plating and timeless crowd-pleasing dishes.",
+    group: "Cuisine Menus",
+    icon: Globe,
+  },
+  {
+    slug: "middle-eastern",
+    title: "Middle Eastern",
+    route: "/menus/middle-eastern",
+    pdfUrl: "https://palacioeventcentre.com/wp-content/uploads/2022/06/MIDDLE-EASTERN-MENU-Halal-Menu.pdf",
+    description:
+      "Vibrant mezze, grilled specialties, and warm hospitality inspired by Middle Eastern dining traditions.",
+    group: "Cuisine Menus",
+    icon: Lamp,
+  },
+  {
+    slug: "gujarati",
+    title: "Gujarati",
+    route: "/menus/gujarati",
+    pdfUrl: "https://palacioeventcentre.com/wp-content/uploads/2022/06/GUJRATI-WEDDING-MENU.pdf",
+    description:
+      "Authentic vegetarian specialties celebrating the rich flavour and colour of Gujarati cuisine.",
+    group: "Cuisine Menus",
+    icon: Salad,
+  },
+  {
+    slug: "caribbean",
+    title: "Caribbean",
+    route: "/menus/caribbean",
+    pdfUrl: "https://palacioeventcentre.com/wp-content/uploads/2022/08/WEST-INDIAN-CARIBBEAN-MENU.pdf",
+    description:
+      "Bold island flavours, vibrant spices, and energetic menus designed for joyful celebrations.",
+    group: "Cuisine Menus",
+    icon: Sparkles,
+  },
+  {
+    slug: "bar-packages",
+    title: "Bar Packages",
+    route: "/menus/bar-packages",
+    pdfUrl: "https://palacioeventcentre.com/wp-content/uploads/2022/06/BAR-PACKAGES.pdf",
+    description:
+      "Curated beverage programs ranging from premium open bars to signature cocktail service.",
+    group: "Services",
+    icon: Wine,
+  },
+  {
+    slug: "outside-catering",
+    title: "Outside Catering",
+    route: "/menus/outside-catering",
+    pdfUrl: "https://palacioeventcentre.com/wp-content/uploads/2022/06/CATERING-MENU.pdf",
+    description:
+      "Off-site catering packages that bring the Palacio culinary experience to your chosen venue.",
+    group: "Services",
+    icon: Truck,
+  },
+  {
+    slug: "holiday-prom",
+    title: "Holiday & Prom",
+    route: "/menus/holiday-prom",
+    pdfUrl: "https://palacioeventcentre.com/wp-content/uploads/2022/06/HOLIDAY-MENU-PACKAGE-.pdf",
+    description:
+      "Seasonal and celebration-specific packages for holiday galas, proms, and festive gatherings.",
+    group: "Services",
+    icon: PartyPopper,
+  },
+];
+
+export const cuisineMenuCollections = menuCollections.filter(
+  (collection) => collection.group === "Cuisine Menus"
+);
+
+export const serviceMenuCollections = menuCollections.filter(
+  (collection) => collection.group === "Services"
+);
+
+export const getMenuCollectionBySlug = (slug: string) =>
+  menuCollections.find((collection) => collection.slug === slug);

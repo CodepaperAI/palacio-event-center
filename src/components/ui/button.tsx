@@ -4,26 +4,26 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-semibold ring-offset-background transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 font-sans tracking-wide",
+  "inline-flex min-h-11 items-center justify-center gap-2 whitespace-nowrap font-sans text-sm font-semibold tracking-[0.12em] ring-offset-background transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90 rounded-2xl",
-        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-2xl",
-        outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-2xl",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-2xl",
-        ghost: "hover:bg-accent hover:text-accent-foreground rounded-2xl",
+        default: "rounded-full bg-primary text-primary-foreground shadow-soft hover:bg-primary/92 hover:shadow-elegant",
+        destructive: "rounded-full bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        outline: "rounded-full border border-border bg-background/80 text-foreground hover:border-gold/30 hover:bg-secondary/60",
+        secondary: "rounded-full bg-secondary text-secondary-foreground hover:bg-secondary/85",
+        ghost: "rounded-full text-foreground/80 hover:bg-foreground/[0.04] hover:text-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        gold: "bg-gold text-charcoal hover:bg-gold-dark rounded-full shadow-elegant hover:shadow-luxury",
-        goldOutline: "border-2 border-gold text-gold hover:bg-gold hover:text-charcoal rounded-full",
-        luxury: "bg-charcoal text-ivory hover:bg-charcoal-light rounded-full shadow-elegant",
-        ivoryOutline: "border-2 border-ivory/80 text-ivory hover:bg-ivory/10 rounded-full",
+        gold: "rounded-full bg-gold text-charcoal shadow-elegant hover:bg-gold-dark hover:shadow-luxury",
+        goldOutline: "rounded-full border border-gold/70 bg-transparent text-gold shadow-none hover:border-gold hover:bg-gold/8 hover:text-gold-light",
+        luxury: "rounded-full bg-charcoal text-ivory shadow-elegant hover:bg-charcoal-light",
+        ivoryOutline: "rounded-full border border-ivory/75 bg-transparent text-ivory shadow-none hover:border-ivory hover:bg-ivory/10",
       },
       size: {
-        default: "h-11 px-6 py-2",
-        sm: "h-9 px-5 text-[13px]",
-        lg: "h-13 px-10 text-base",
-        xl: "h-14 px-12 text-base",
+        default: "h-11 px-6",
+        sm: "h-10 px-5 text-[12px]",
+        lg: "h-12 px-8 text-[13px]",
+        xl: "h-14 px-10 text-sm sm:px-12",
         icon: "h-10 w-10",
       },
     },

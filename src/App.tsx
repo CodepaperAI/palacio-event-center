@@ -21,7 +21,12 @@ import OutsideCateringMenu from "./pages/menus/OutsideCatering.tsx";
 import HolidayPromMenu from "./pages/menus/HolidayProm.tsx";
 import Gallery from "./pages/Gallery.tsx";
 import Blog from "./pages/Blog.tsx";
+import BlogPost from "./pages/BlogPost.tsx";
 import Contact from "./pages/Contact.tsx";
+import IbizaGrandBallroom from "./pages/spaces/IbizaGrandBallroom.tsx";
+import IbizaA from "./pages/spaces/IbizaA.tsx";
+import IbizaB from "./pages/spaces/IbizaB.tsx";
+import Arriba from "./pages/spaces/Arriba.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -51,7 +56,12 @@ const App = () => (
           <Route path="/menus/holiday-prom" element={<HolidayPromMenu />} />
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/spaces/ibiza-grand-ballroom" element={<IbizaGrandBallroom />} />
+          <Route path="/spaces/ibiza-a" element={<IbizaA />} />
+          <Route path="/spaces/ibiza-b" element={<IbizaB />} />
+          <Route path="/spaces/arriba" element={<Arriba />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
