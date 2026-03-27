@@ -1,12 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import { motion } from "framer-motion";
 import { fadeUpVariants } from "@/hooks/useScrollAnimation";
 import { AnimatedSection, PageHero, SectionHeading, SiteCtaSection } from "@/components/ui/design-system";
-import { blogPosts, type BlogPost } from "@/data/blogs";
+import { resolvedBlogPosts as staticBlogPosts, type BlogPost } from "@/data/blogs";
+import { fetchBlogPosts } from "@/lib/blogs-api";
 import { ArrowRight, Calendar, Clock3, User } from "lucide-react";
 import { format } from "date-fns";
 
@@ -81,11 +83,24 @@ const Blog = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 8;
 
-  const totalPages = Math.max(1, Math.ceil(blogPosts.length / postsPerPage));
+  // Fetch blog posts from Uplift API
+  const { data: apiPosts = [] } = useQuery({
+    queryKey: ["blog-posts"],
+    queryFn: fetchBlogPosts,
+  });
+
+  // Combine: new API posts first, then existing static posts, sorted newest first
+  const allPosts = useMemo(() => {
+    return [...apiPosts, ...staticBlogPosts].sort(
+      (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+    );
+  }, [apiPosts]);
+
+  const totalPages = Math.max(1, Math.ceil(allPosts.length / postsPerPage));
   const paginatedPosts = useMemo(() => {
     const startIndex = (currentPage - 1) * postsPerPage;
-    return blogPosts.slice(startIndex, startIndex + postsPerPage);
-  }, [currentPage]);
+    return allPosts.slice(startIndex, startIndex + postsPerPage);
+  }, [currentPage, allPosts]);
 
   useEffect(() => {
     if (currentPage > totalPages) {
@@ -126,8 +141,8 @@ const Blog = () => {
 
         <motion.div variants={fadeUpVariants} className="mb-10 text-center">
           <p className="text-sm text-muted-foreground font-sans">
-            Showing {Math.min((currentPage - 1) * postsPerPage + 1, blogPosts.length)}-
-            {Math.min(currentPage * postsPerPage, blogPosts.length)} of {blogPosts.length} articles
+            Showing {Math.min((currentPage - 1) * postsPerPage + 1, allPosts.length)}-
+            {Math.min(currentPage * postsPerPage, allPosts.length)} of {allPosts.length} articles
           </p>
         </motion.div>
 
@@ -139,7 +154,7 @@ const Blog = () => {
         </div>
 
         {/* Empty State */}
-        {blogPosts.length === 0 && (
+        {allPosts.length === 0 && (
           <div className="text-center py-16">
             <p className="text-muted-foreground text-lg">
               No articles are available right now.
@@ -147,7 +162,7 @@ const Blog = () => {
           </div>
         )}
 
-        {blogPosts.length > postsPerPage && (
+        {allPosts.length > postsPerPage && (
           <motion.div
             variants={fadeUpVariants}
             className="mt-12 flex flex-wrap items-center justify-center gap-3"

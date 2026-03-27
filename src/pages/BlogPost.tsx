@@ -1,10 +1,12 @@
 import { Link, useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, Calendar, Clock3, User } from "lucide-react";
 import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
-import { blogPosts, getRelatedBlogPosts } from "@/data/blogs";
+import { resolvedBlogPosts, getRelatedBlogPosts } from "@/data/blogs";
+import { fetchBlogPost } from "@/lib/blogs-api";
 import NotFound from "@/pages/NotFound";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,12 +21,22 @@ import { format } from "date-fns";
 
 const BlogPost = () => {
   const { slug } = useParams();
-  const post = blogPosts.find((item) => item.slug === slug);
+
+  // Try fetching from API first, fall back to local data
+  const { data: apiPost } = useQuery({
+    queryKey: ["blog-post", slug],
+    queryFn: () => fetchBlogPost(slug!),
+    enabled: !!slug,
+  });
+
+  // Use API post if found, otherwise fall back to local blogPosts
+  const post = apiPost ?? resolvedBlogPosts.find((item) => item.slug === slug);
 
   if (!post) {
     return <NotFound />;
   }
 
+  // For related posts, only use local blogPosts (avoid mixing API and local)
   const relatedPosts = getRelatedBlogPosts(post);
   const renderedContent = normalizeWordPressContent(post.contentHtml) || post.contentHtml;
   const postLabel = post.category ?? "Blog";
